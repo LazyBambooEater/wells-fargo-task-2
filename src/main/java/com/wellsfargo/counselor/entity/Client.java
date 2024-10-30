@@ -7,11 +7,18 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 
 @Entity
-public class Advisor {
+public class Client {
 
     @Id
     @GeneratedValue()
-    private long advisorId;
+    private long clientId;
+
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="advisorId")
+    private Advisor advisor;
+
+    @OneToMany(mappedBy ="client")
+    private List<Portfolio> portfolio;
 
     @Column(nullable = false)
     private String firstName;
@@ -28,14 +35,12 @@ public class Advisor {
     @Column(nullable = false)
     private String email;
 
-    @OneToMany(mappedBy = "advisor")
-    private List<Client> client;
-
-    protected Advisor() {
+    protected Client() {
 
     }
 
-    public Advisor(String firstName, String lastName, String address, String phone, String email) {
+    public Client(long advisorId, String firstName, String lastName, String address, String phone, String email) {
+        this.advisorId = advisorId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
@@ -43,9 +48,10 @@ public class Advisor {
         this.email = email;
     }
 
-    public Long getAdvisorId() {
-        return advisorId;
+    public Long getClientId() {
+        return clientId;
     }
+
 
     public String getFirstName() {
         return firstName;
